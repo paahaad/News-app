@@ -4,11 +4,31 @@
 import nav from "/components/navbar.js";
 
 document.getElementById("navbar").innerHTML = nav();
-let query = 'tesla';
-let api = `https://masai-mock-api.herokuapp.com/news?q=${query}`
-fetch(api)
-        .then(response => response.json())
-        .then(data => show(data.articles));
+
+document.getElementById("search_input").addEventListener("keypress", searchNews);
+
+function searchNews(){
+        if(event.key == "Enter"){
+            event.preventDefault();
+            // console.log(`hello`)
+            let query = document.getElementById("search_input").value;
+            console.log(query)
+    
+            let api = `https://masai-mock-api.herokuapp.com/news?q=${query}`
+            fetch(api)
+                .then(response => response.json())
+                .then(data => {
+                    localStorage.setItem('news',JSON.stringify(data.articles));
+                    window.location.href = "search.html";
+                });
+        }
+}
+    
+
+
+let data = JSON.parse(localStorage.getItem('news')) || [];
+show(data)
+
 
 function show(data){
         let results = document.getElementById("results")
@@ -33,6 +53,6 @@ function show(data){
                 div.append(titl, disciptio)
                 news.append(img, div)
                 results.append(news)
-                });
+        });
         
-        } 
+} 

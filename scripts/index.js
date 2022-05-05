@@ -6,6 +6,7 @@ import nav from "/components/navbar.js";
 document.getElementById("navbar").innerHTML = nav();
 
 document.getElementById("search_input").addEventListener("keypress", searchNews);
+
 document.querySelector("#in").addEventListener("click", function(){
     selectCon("in")
 })
@@ -24,7 +25,6 @@ document.querySelector("#nz").addEventListener("click", function(){
 
 
 function selectCon(contry){
-    // console.log(contry)
     displayData(contry)
 }
 
@@ -63,13 +63,20 @@ function displayData(contry){
 
    } 
 }
+
 function searchNews(){
     if(event.key == "Enter"){
         event.preventDefault();
         // console.log(`hello`)
         let query = document.getElementById("search_input").value;
-        window.location.href = "search.html";
-   
+        console.log(query)
 
+        let api = `https://masai-mock-api.herokuapp.com/news?q=${query}`
+        fetch(api)
+            .then(response => response.json())
+            .then(data => {
+                localStorage.setItem('news',JSON.stringify(data.articles));
+                window.location.href = "search.html";
+            });
     }
 }
